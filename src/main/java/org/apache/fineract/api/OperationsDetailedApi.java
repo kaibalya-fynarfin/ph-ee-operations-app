@@ -2,7 +2,7 @@ package org.apache.fineract.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.fineract.data.ErrorResponse;
 import org.apache.fineract.exception.WriteToCsvException;
 import org.apache.fineract.operations.*;
+import org.apache.fineract.response.SuccessfulPageTransactionRequest;
+import org.apache.fineract.response.SuccessfulPageTransferResponse;
 import org.apache.fineract.utils.CsvUtility;
 import org.apache.fineract.utils.DateUtil;
 import org.slf4j.Logger;
@@ -55,80 +57,8 @@ public class OperationsDetailedApi {
     private DateUtil dateUtil;
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Returns transfer data based on the parameters", content = @Content(mediaType = "application/json", examples = {
-                    @ExampleObject(name = "Parameter is transaction id", value = "{\n"
-                            + "    \"content\": [\n"
-                            + "        {\n"
-                            + "            \"id\": 36258,\n"
-                            + "            \"workflowInstanceKey\": 2251799818287561,\n"
-                            + "            \"transactionId\": \"7ce285e4-7cc4-4e61-8888-8cef309f8063\",\n"
-                            + "            \"startedAt\": 1720157274000,\n"
-                            + "            \"completedAt\": 1720157514000,\n"
-                            + "            \"status\": \"COMPLETED\",\n"
-                            + "            \"statusDetail\": null,\n"
-                            + "            \"payeeDfspId\": null,\n"
-                            + "            \"payeePartyId\": \"27710102999\",\n"
-                            + "            \"payeePartyIdType\": \"MSISDN\",\n"
-                            + "            \"payeeFee\": null,\n"
-                            + "            \"payeeFeeCurrency\": null,\n"
-                            + "            \"payeeQuoteCode\": null,\n"
-                            + "            \"payerDfspId\": null,\n"
-                            + "            \"payerPartyId\": \"27710101999\",\n"
-                            + "            \"payerPartyIdType\": \"MSISDN\",\n"
-                            + "            \"payerFee\": null,\n"
-                            + "            \"payerFeeCurrency\": null,\n"
-                            + "            \"payerQuoteCode\": null,\n"
-                            + "            \"amount\": \"230\",\n"
-                            + "            \"currency\": \"SNR\",\n"
-                            + "            \"direction\": \"OUTGOING\",\n"
-                            + "            \"errorInformation\": null,\n"
-                            + "            \"batchId\": \"null\",\n"
-                            + "            \"clientCorrelationId\": \"null\"\n"
-                            + "        }\n"
-                            + "    ],\n"
-                            + "    \"pageable\": {\n"
-                            + "        \"sort\": {\n"
-                            + "            \"sorted\": true,\n"
-                            + "            \"unsorted\": false,\n"
-                            + "            \"empty\": false\n"
-                            + "        },\n"
-                            + "        \"offset\": 0,\n"
-                            + "        \"pageSize\": 1,\n"
-                            + "        \"pageNumber\": 0,\n"
-                            + "        \"paged\": true,\n"
-                            + "        \"unpaged\": false\n"
-                            + "    },\n"
-                            + "    \"totalPages\": 1,\n"
-                            + "    \"totalElements\": 1,\n"
-                            + "    \"last\": true,\n"
-                            + "    \"size\": 1,\n"
-                            + "    \"number\": 0,\n"
-                            + "    \"sort\": {\n"
-                            + "        \"sorted\": true,\n"
-                            + "        \"unsorted\": false,\n"
-                            + "        \"empty\": false\n"
-                            + "    },\n"
-                            + "    \"first\": true,\n"
-                            + "    \"numberOfElements\": 1,\n"
-                            + "    \"empty\": false\n"
-                            + "}"),
-                    @ExampleObject(name = "Parameter is size = 3", value = "{\n" + "    \"errorCategory\": \"Validation\",\n"
-                            + "    \"errorCode\": \"error.msg.schema.validation.errors\",\n"
-                            + "    \"errorDescription\": \"The request is invalid\",\n"
-                            + "    \"developerMessage\": \"The request is invalid\",\n"
-                            + "    \"defaultUserMessage\": \"The request is invalid\",\n" + "    \"errorParameters\": null,\n"
-                            + "    \"errors\": [\n" + "        {\n" + "            \"errorCategory\": \"Validation\",\n"
-                            + "            \"errorCode\": \"error.msg.schema.payer.cannot.be.null.or.empty\",\n"
-                            + "            \"errorDescription\": \"Payer cannot be null or empty\",\n"
-                            + "            \"errorParameters\": null\n" + "        },\n" + "        {\n"
-                            + "            \"errorCategory\": \"Validation\",\n"
-                            + "            \"errorCode\": \"error.msg.schema.payee.cannot.be.null.or.empty\",\n"
-                            + "            \"errorDescription\": \"Payee cannot be null or empty\",\n"
-                            + "            \"errorParameters\": null\n" + "        },\n" + "        {\n"
-                            + "            \"errorCategory\": \"Validation\",\n"
-                            + "            \"errorCode\": \"error.msg.schema.amount.cannot.be.null.or.empty\",\n"
-                            + "            \"errorDescription\": \"Amount cannot be null or empty\",\n"
-                            + "            \"errorParameters\": null\n" + "        }\n" + "    ]\n" + "}") })) })
+            @ApiResponse(responseCode = "200", description = "Accepted", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessfulPageTransferResponse.class)))
+    })
     @GetMapping("/transfers")
     public Page<TransferResponse> transfers(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
@@ -328,126 +258,9 @@ public class OperationsDetailedApi {
         return paginatedTransferResponse;
     }
 
-
-
-
-
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Returns list of transaction requests successfully", content = @Content(mediaType = "application/json", examples = {
-                    @ExampleObject(name = "Single transaction request", value = "{\n"
-                            + "    \"content\": [\n"
-                            + "        {\n"
-                            + "            \"id\": 1,\n"
-                            + "            \"workflowInstanceKey\": \"2251799816099637\",\n"
-                            + "            \"transactionId\": \"8c2358be640c4BtABNeY\",\n"
-                            + "            \"startedAt\": 1654769838000,\n"
-                            + "            \"completedAt\": null,\n"
-                            + "            \"state\": \"ACCEPTED\",\n"
-                            + "            \"payeeDfspId\": null,\n"
-                            + "            \"payeePartyId\": \"24450523\",\n"
-                            + "            \"payeePartyIdType\": \"ACCOUNTID\",\n"
-                            + "            \"payeeFee\": null,\n"
-                            + "            \"payeeQuoteCode\": null,\n"
-                            + "            \"payerDfspId\": null,\n"
-                            + "            \"payerPartyId\": \"254708374149\",\n"
-                            + "            \"payerPartyIdType\": \"MSISDN\",\n"
-                            + "            \"payerFee\": null,\n"
-                            + "            \"payerQuoteCode\": null,\n"
-                            + "            \"amount\": 1,\n"
-                            + "            \"currency\": \"USD\",\n"
-                            + "            \"direction\": \"INCOMING\",\n"
-                            + "            \"authType\": null,\n"
-                            + "            \"initiatorType\": \"BUSINESS\",\n"
-                            + "            \"scenario\": \"MPESA\"\n"
-                            + "        }\n"
-                            + "    ],\n"
-                            + "    \"totalPages\": 1,\n"
-                            + "    \"totalElements\": 1,\n"
-                            + "    \"last\": true,\n"
-                            + "    \"numberOfElements\": 1,\n"
-                            + "    \"sort\": [\n"
-                            + "        {\n"
-                            + "            \"direction\": \"DESC\",\n"
-                            + "            \"property\": \"startedAt\",\n"
-                            + "            \"ignoreCase\": false,\n"
-                            + "            \"nullHandling\": \"NATIVE\",\n"
-                            + "            \"descending\": true,\n"
-                            + "            \"ascending\": false\n"
-                            + "        }\n"
-                            + "    ],\n"
-                            + "    \"first\": true,\n"
-                            + "    \"size\": 20,\n"
-                            + "    \"number\": 0\n"
-                            + "}"),
-                    @ExampleObject(name = "Multiple transaction requests", value = "{\n"
-                            + "    \"content\": [\n"
-                            + "        {\n"
-                            + "            \"id\": 2,\n"
-                            + "            \"workflowInstanceKey\": \"2251799816729405\",\n"
-                            + "            \"transactionId\": \"dd2183f3ac5d5leU5nz3\",\n"
-                            + "            \"startedAt\": 1654993348000,\n"
-                            + "            \"completedAt\": null,\n"
-                            + "            \"state\": \"ACCEPTED\",\n"
-                            + "            \"payeeDfspId\": null,\n"
-                            + "            \"payeePartyId\": \"24450523\",\n"
-                            + "            \"payeePartyIdType\": \"ACCOUNTID\",\n"
-                            + "            \"payeeFee\": null,\n"
-                            + "            \"payeeQuoteCode\": null,\n"
-                            + "            \"payerDfspId\": null,\n"
-                            + "            \"payerPartyId\": \"254708374149\",\n"
-                            + "            \"payerPartyIdType\": \"MSISDN\",\n"
-                            + "            \"payerFee\": null,\n"
-                            + "            \"payerQuoteCode\": null,\n"
-                            + "            \"amount\": 1,\n"
-                            + "            \"currency\": \"USD\",\n"
-                            + "            \"direction\": \"INCOMING\",\n"
-                            + "            \"authType\": null,\n"
-                            + "            \"initiatorType\": \"BUSINESS\",\n"
-                            + "            \"scenario\": \"MPESA\"\n"
-                            + "        },\n"
-                            + "        {\n"
-                            + "            \"id\": 1,\n"
-                            + "            \"workflowInstanceKey\": \"2251799816099637\",\n"
-                            + "            \"transactionId\": \"8c2358be640c4BtABNeY\",\n"
-                            + "            \"startedAt\": 1654769838000,\n"
-                            + "            \"completedAt\": null,\n"
-                            + "            \"state\": \"ACCEPTED\",\n"
-                            + "            \"payeeDfspId\": null,\n"
-                            + "            \"payeePartyId\": \"24450523\",\n"
-                            + "            \"payeePartyIdType\": \"ACCOUNTID\",\n"
-                            + "            \"payeeFee\": null,\n"
-                            + "            \"payeeQuoteCode\": null,\n"
-                            + "            \"payerDfspId\": null,\n"
-                            + "            \"payerPartyId\": \"254708374149\",\n"
-                            + "            \"payerPartyIdType\": \"MSISDN\",\n"
-                            + "            \"payerFee\": null,\n"
-                            + "            \"payerQuoteCode\": null,\n"
-                            + "            \"amount\": 1,\n"
-                            + "            \"currency\": \"USD\",\n"
-                            + "            \"direction\": \"INCOMING\",\n"
-                            + "            \"authType\": null,\n"
-                            + "            \"initiatorType\": \"BUSINESS\",\n"
-                            + "            \"scenario\": \"MPESA\"\n"
-                            + "        }\n"
-                            + "    ],\n"
-                            + "    \"totalPages\": 1,\n"
-                            + "    \"totalElements\": 2,\n"
-                            + "    \"last\": true,\n"
-                            + "    \"numberOfElements\": 2,\n"
-                            + "    \"sort\": [\n"
-                            + "        {\n"
-                            + "            \"direction\": \"DESC\",\n"
-                            + "            \"property\": \"startedAt\",\n"
-                            + "            \"ignoreCase\": false,\n"
-                            + "            \"nullHandling\": \"NATIVE\",\n"
-                            + "            \"descending\": true,\n"
-                            + "            \"ascending\": false\n"
-                            + "        }\n"
-                            + "    ],\n"
-                            + "    \"first\": true,\n"
-                            + "    \"size\": 20,\n"
-                            + "    \"number\": 0\n"
-                            + "}") })) })
+            @ApiResponse(responseCode = "200", description = "Accepted", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessfulPageTransactionRequest.class)))
+    })
     @GetMapping("/transactionRequests")
     public Page<TransactionRequest> transactionRequests(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,

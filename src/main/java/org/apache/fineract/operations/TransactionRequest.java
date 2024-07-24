@@ -3,6 +3,7 @@ package org.apache.fineract.operations;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.apache.fineract.organisation.parent.AbstractPersistableCustom;
 
 import javax.persistence.CascadeType;
@@ -24,73 +25,107 @@ import static org.apache.fineract.operations.TransactionRequestState.IN_PROGRESS
 @Table(name = "transaction_requests")
 public class TransactionRequest extends AbstractPersistableCustom<Long> {
 
+    @Schema(description = "Workflow instance key associated with the transaction request", example = "2251799816099637")
     @Column(name = "WORKFLOW_INSTANCE_KEY")
     private String workflowInstanceKey;
 
+    @Schema(description = "Transaction identifier", example = "8c2358be640c4BtABNeY")
     @Column(name = "TRANSACTION_ID")
     private String transactionId;
 
+    @Schema(description = "Timestamp when the transaction started (epoch milliseconds)", example = "1654769838000")
     @Column(name = "STARTED_AT")
     private Date startedAt;
 
+    @Schema(description = "Timestamp when the transaction was completed (epoch milliseconds)", example = "null")
     @Column(name = "COMPLETED_AT")
     private Date completedAt;
 
+    @Schema(description = "State of the transaction request", example = "ACCEPTED")
     @Enumerated(EnumType.STRING)
     @Column(name = "STATE")
     private TransactionRequestState state;
 
+    @Schema(description = "ID of the payee DFSP", example = "null")
     @Column(name = "PAYEE_DFSP_ID")
     private String payeeDfspId;
+
+    @Schema(description = "ID of the payee party", example = "24450523")
     @Column(name = "PAYEE_PARTY_ID")
     private String payeePartyId;
+
+    @Schema(description = "Type of the payee party ID", example = "ACCOUNTID")
     @Column(name = "PAYEE_PARTY_ID_TYPE")
     private String payeePartyIdType;
+
+    @Schema(description = "Fee charged to the payee", example = "null")
     @Column(name = "PAYEE_FEE")
     private BigDecimal payeeFee;
+
+    @Schema(description = "Quote code for the payee", example = "null")
     @Column(name = "PAYEE_QUOTE_CODE")
     private String payeeQuoteCode;
 
+    @Schema(description = "ID of the payer DFSP", example = "null")
     @Column(name = "PAYER_DFSP_ID")
     private String payerDfspId;
+
+    @Schema(description = "ID of the payer party", example = "254708374149")
     @Column(name = "PAYER_PARTY_ID")
     private String payerPartyId;
+
+    @Schema(description = "Type of the payer party ID", example = "MSISDN")
     @Column(name = "PAYER_PARTY_ID_TYPE")
     private String payerPartyIdType;
+
+    @Schema(description = "Fee charged to the payer", example = "null")
     @Column(name = "PAYER_FEE")
     private BigDecimal payerFee;
+
+    @Schema(description = "Quote code for the payer", example = "null")
     @Column(name = "PAYER_QUOTE_CODE")
     private String payerQuoteCode;
 
+    @Schema(description = "Amount of the transaction", example = "1")
     @Column(name = "AMOUNT")
     private BigDecimal amount;
 
+    @Schema(description = "Currency of the transaction amount", example = "USD")
     @Column(name = "CURRENCY")
     private String currency;
 
+    @Schema(description = "Direction of the transaction", example = "INCOMING")
     @Column(name = "DIRECTION")
     private String direction;
 
+    @Schema(description = "Type of authentication used", example = "null")
     @Column(name = "AUTH_TYPE")
     private String authType;
 
+    @Schema(description = "Type of initiator", example = "BUSINESS")
     @Column(name = "INITIATOR_TYPE")
     private String initiatorType;
 
+    @Schema(description = "Scenario for the transaction", example = "MPESA")
     @Column(name = "SCENARIO")
     private String scenario;
 
+    @Schema(description = "External ID associated with the transaction request", example = "null")
     @Column(name = "EXTERNAL_ID")
     private String externalId;
 
+    @Schema(description = "Client correlation ID associated with the transaction request", example = "null")
     @Column(name = "CLIENTCORRELATIONID")
     private String clientCorrelationId;
 
+    @Schema(description = "Error information, if any", example = "null")
     @Column(name = "ERROR_INFORMATION")
     private String errorInformation;
 
+    @Schema(description = "List of variables associated with the transaction request")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "transactionRequest", fetch = FetchType.LAZY)
     private List<Variable> variables;
+
 
     @JsonIgnore
     @JsonManagedReference
